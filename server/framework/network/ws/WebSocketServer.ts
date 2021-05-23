@@ -1,40 +1,37 @@
 import ws from "ws";
 
-export class WebSocketServer {
-    private server!: ws.Server;
+export class WebSocketServer extends ws.Server {
     private wsList: ws[] = [];
     private isListenning: boolean = false;
     private port: number = 0;
 
-
-    // private init() {
-
-    // }
-
     listen(port: number) {
-        this.server = new ws.Server({ port: port });
-        this.server?.on("close", () => {
-            this.close();
+        this.on("close", () => {
+            this.onClose();
         });
 
-        this.server.on("connection", (socket) => {
-
+        this.on("connection", (socket) => {
+            this.onConnection(socket);
         });
 
-        this.server.on("error", (error) => {
-            this.close();
+        this.on("error", (error) => {
+            this.onClose();
         });
 
-        this.server.on("listening", () => {
+        this.on("listening", () => {
             this.port = port;
         });
     }
 
-    onConnection() {
+    onConnection(socket: ws) {
 
     }
 
-    close() {
+    onMessage(data: ws.Data) {
+
+    }
+
+    onClose() {
 
     }
 }

@@ -1,43 +1,39 @@
 import ws from "ws";
 import { IWsConfig } from "./IWs";
 
-export class WebSocketClient {
-    /**
-     * websocket 节点
-     */
-    private ws: ws;
+export class WebSocketClient extends ws {
     /** 
      * 是否连接成功
      */
     private isConnected: boolean = false;
 
     constructor(config: IWsConfig) {
-        this.ws = new ws(`ws://${config.host}:${config.port}`);
+        super(`ws://${config.host}:${config.port}`);
         this.init();
     }
 
     private init() {
-        this.ws.on("error", (err: Error) => {
+        this.on("error", (err: Error) => {
             this.onClose();
         });
 
-        this.ws.on("open", () => {
+        this.on("open", () => {
             this.isConnected = true;
             this.onOpen();
         });
 
-        this.ws.on("close", (code: number, reason: string) => {
+        this.on("close", (code: number, reason: string) => {
             this.onClose();
         });
 
-        this.ws.on("message", (data: ws.Data) => {
+        this.on("message", (data: ws.Data) => {
             this.onData(data);
         });
     }
 
     onClose() {
         this.isConnected = false;
-        this.ws.close();
+        this.close();
     }
 
     onOpen() {
